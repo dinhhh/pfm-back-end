@@ -18,12 +18,6 @@ class UserRepositoryTest {
         user.setEmail("email");
         user.setPhone("0866827702");
         user.setPassword("pw");
-        User user2 = new User();
-        user2.setAddress("Hanoi");
-        user2.setEmail("email");
-        user2.setPhone("0866827702");
-        user2.setPassword("pw");
         repository.save(user);
-        repository.save(user2);
     }
 }

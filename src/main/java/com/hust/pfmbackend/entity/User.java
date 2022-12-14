@@ -14,7 +14,7 @@ public class User {
     @UuidGenerator(style = UuidGenerator.Style.AUTO)
     private String userNo;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     private String fullName;
