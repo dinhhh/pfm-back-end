@@ -5,6 +5,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +19,8 @@ import java.io.IOException;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
+
+    private static final Logger LOGGER = LogManager.getLogger(JwtFilter.class);
 
     @Autowired
     private JwtUserDetailsService userDetailsService;
@@ -36,15 +40,16 @@ public class JwtFilter extends OncePerRequestFilter {
             try {
                 userName = manager.getUserNameFromToken(token);
             } catch (IllegalArgumentException e) {
-                System.out.println("Unable to get JWT token");;
+                LOGGER.info("Unable to get JWT token");;
             } catch (ExpiredJwtException e) {
-                System.out.println("JWT token has expired");
+                LOGGER.info("JWT token has expired");
             }
         } else {
-            System.out.println("Bearer String not found in token");
+            LOGGER.info("Bearer String not found in token");
         }
 
         if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            LOGGER.info(String.format("Start validate jwt token %s from user", token));
             UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
             if (manager.validateJwtToken(token, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
