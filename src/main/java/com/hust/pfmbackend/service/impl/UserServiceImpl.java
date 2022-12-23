@@ -1,7 +1,7 @@
 package com.hust.pfmbackend.service.impl;
 
 import com.hust.pfmbackend.entity.User;
-import com.hust.pfmbackend.model.request.SignInRequest;
+import com.hust.pfmbackend.model.request.SignUpRequest;
 import com.hust.pfmbackend.repository.UserRepository;
 import com.hust.pfmbackend.service.UserService;
 import org.apache.logging.log4j.LogManager;
@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
     private BCryptPasswordEncoder passwordEncoder;
 
     @Override
-    public boolean signIn(SignInRequest request) {
+    public boolean signUp(SignUpRequest request) {
         String email = request.getEmail();
         String pw = request.getPw();
         String fullName = request.getFullName();

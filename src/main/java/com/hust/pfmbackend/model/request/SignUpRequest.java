@@ -7,7 +7,7 @@ import lombok.ToString;
 @Data
 @Builder
 @ToString
-public class SignInRequest {
+public class SignUpRequest {
 
     private String fullName;
     private String email;

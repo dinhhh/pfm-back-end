@@ -1,9 +1,11 @@
 package com.hust.pfmbackend.service;
 
-import com.hust.pfmbackend.model.request.SignInRequest;
+import com.hust.pfmbackend.model.request.SignUpRequest;
 
 public interface UserService {
 
-    boolean signIn(SignInRequest request);
+    boolean signUp(SignUpRequest request);
+
+
 
 }
