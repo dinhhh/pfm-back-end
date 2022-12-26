@@ -1,13 +1,11 @@
 package com.hust.pfmbackend.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
+
+import java.util.Collection;
 
 @Entity
 @Data
@@ -18,10 +16,12 @@ public class User {
 
     @Id
     @UuidGenerator(style = UuidGenerator.Style.AUTO)
+    @JsonIgnore
+    @ToString.Exclude
     private String userNo;
 
     @Column(nullable = false, unique = true)
-    private String email;
+    private String email; // userName in security context
 
     private String fullName;
 
@@ -30,6 +30,26 @@ public class User {
     private String address;
 
     @Column(nullable = false)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JsonIgnore
     private String password;
 
+    @OneToMany(mappedBy = "user")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JsonIgnore
+    private Collection<ExpenseIncome> expenseIncomes;
+
+    @OneToMany(mappedBy = "user")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JsonIgnore
+    private Collection<Category> categories;
+
+    @OneToMany(mappedBy = "user")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JsonIgnore
+    private Collection<Wallet> wallets;
 }

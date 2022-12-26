@@ -15,9 +15,8 @@ class UserRepositoryTest {
     void insertTest() {
         User user = new User();
         user.setAddress("Hanoi");
-        user.setEmail("email");
+        user.setEmail("admin");
         user.setPhone("0866827702");
-        user.setPassword("pw");
         repository.save(user);
     }
 }
