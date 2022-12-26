@@ -65,7 +65,7 @@ public class CategoryServiceImpl implements CategoryService {
         try {
             LOGGER.info("Starting get user from token");
             Set<CategoryResponse> responses = getCategoryResponsesByOperationType(OperationType.EXPENSE);
-            LOGGER.info("Build response done");
+            LOGGER.info("Build expense response done");
             return responses.stream().toList();
         } catch (Exception e) {
             LOGGER.error("Error when get all categories of user");
@@ -78,7 +78,7 @@ public class CategoryServiceImpl implements CategoryService {
         try {
             LOGGER.info("Starting get user from token");
             Set<CategoryResponse> responses = getCategoryResponsesByOperationType(OperationType.INCOME);
-            LOGGER.info("Build response done");
+            LOGGER.info("Build income response done");
             return responses.stream().toList();
         } catch (Exception e) {
             LOGGER.error("Error when get all categories of user");

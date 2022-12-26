@@ -29,4 +29,7 @@ public class ExpenseIncomeRequest {
     @NotBlank
     private String categoryNo;
 
+    @NotNull
+    private int operationCode;
+
 }

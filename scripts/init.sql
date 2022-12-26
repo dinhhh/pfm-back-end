@@ -1,13 +1,13 @@
 create database if not exists pfm_dev;
 
-create table `pfm-dev`.category
+create table `pfm_dev`.category
 (
     category_no varchar(255) not null
         primary key,
     description varchar(255) null
 );
 
-create table `pfm-dev`.user
+create table `pfm_dev`.user
 (
     user_no   varchar(255) not null
         primary key,
@@ -20,7 +20,7 @@ create table `pfm-dev`.user
         unique (email)
 );
 
-create table `pfm-dev`.expense_income
+create table `pfm_dev`.expense_income
 (
     expense_income_no varchar(255) not null
         primary key,
@@ -30,10 +30,10 @@ create table `pfm-dev`.expense_income
     operation_type    varchar(255) null,
     user_no           varchar(255) not null,
     constraint FKisf2okombk9xcnxee9grvxxpo
-        foreign key (user_no) references `pfm-dev`.user (user_no)
+        foreign key (user_no) references `pfm_dev`.user (user_no)
 );
 
-create table `pfm-dev`.sub_category
+create table `pfm_dev`.sub_category
 (
     category_no    varchar(255) not null
         primary key,
@@ -44,7 +44,7 @@ create table `pfm-dev`.sub_category
     parent_id      varchar(255) null,
     user_no        varchar(255) not null,
     constraint FKkeytvve4kkl0b30ntf279xggw
-        foreign key (user_no) references `pfm-dev`.user (user_no),
+        foreign key (user_no) references `pfm_dev`.user (user_no),
     constraint FKlqrv1aj0pon999jbi5esfpe4k
-        foreign key (parent_id) references `pfm-dev`.category (category_no)
+        foreign key (parent_id) references `pfm_dev`.category (category_no)
 );

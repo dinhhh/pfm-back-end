@@ -1,7 +1,9 @@
 package com.hust.pfmbackend.service.impl;
 
 import com.hust.pfmbackend.entity.ExpenseIncome;
+import com.hust.pfmbackend.entity.OperationType;
 import com.hust.pfmbackend.entity.User;
+import com.hust.pfmbackend.entity.Wallet;
 import com.hust.pfmbackend.model.request.ExpenseIncomeRequest;
 import com.hust.pfmbackend.repository.ExpenseIncomeRepository;
 import com.hust.pfmbackend.repository.WalletRepository;
@@ -37,13 +39,19 @@ public class ExpenseIncomeServiceImpl implements ExpenseIncomeService {
         try {
             LOGGER.info("Starting save new expense income");
             User user = authManager.getUserByToken();
+            Wallet wallet = walletRepository.findById(request.getWalletNo()).orElseThrow();
+            long newBalance = wallet.getBalance() - request.getAmount();
+            wallet.setBalance(newBalance);
+            walletRepository.save(wallet);
+            LOGGER.info(String.format("Updated wallet balance from to %d", newBalance));
             ExpenseIncome ei = ExpenseIncome.builder()
                     .createOn(request.getCreatedOn())
                     .amount(request.getAmount())
                     .description(request.getDescription())
-                    .categoryNo(request.getCategoryNo()) // TODO: Mapping latter
-                    .wallet(walletRepository.findById(request.getWalletNo()).orElseThrow())
+                    .categoryNo(request.getCategoryNo())
+                    .wallet(wallet)
                     .user(user)
+                    .operationType(OperationType.findByCode(request.getOperationCode()))
                     .build();
             expenseIncomeRepository.save(ei);
             LOGGER.info("Saved new expense income entity");
