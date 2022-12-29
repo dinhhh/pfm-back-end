@@ -40,10 +40,17 @@ public class ExpenseIncomeServiceImpl implements ExpenseIncomeService {
             LOGGER.info("Starting save new expense income");
             User user = authManager.getUserByToken();
             Wallet wallet = walletRepository.findById(request.getWalletNo()).orElseThrow();
-            long newBalance = wallet.getBalance() - request.getAmount();
-            wallet.setBalance(newBalance);
+            if (request.getOperationCode() == OperationType.EXPENSE.getCode()) {
+                long newBalance = wallet.getBalance() - request.getAmount();
+                wallet.setBalance(newBalance);
+                LOGGER.info(String.format("Updated wallet balance from to %d", newBalance));
+            }
+            if (request.getOperationCode() == OperationType.INCOME.getCode()) {
+                long newBalance = wallet.getBalance() + request.getAmount();
+                wallet.setBalance(newBalance);
+                LOGGER.info(String.format("Updated wallet balance from to %d", newBalance));
+            }
             walletRepository.save(wallet);
-            LOGGER.info(String.format("Updated wallet balance from to %d", newBalance));
             ExpenseIncome ei = ExpenseIncome.builder()
                     .createOn(request.getCreatedOn())
                     .amount(request.getAmount())
