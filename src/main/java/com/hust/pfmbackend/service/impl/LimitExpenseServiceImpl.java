@@ -61,6 +61,12 @@ public class LimitExpenseServiceImpl implements LimitExpenseService {
             return false;
         }
 
+        if (request.getStartDate().after(request.getEndDate())) {
+            LOGGER.error(String.format("Start date %s is after end date %s",
+                    request.getStartDate(), request.getEndDate()));
+            return false;
+        }
+
         try {
             User user = authManager.getUserByToken();
             LimitExpense le = LimitExpense.builder()
