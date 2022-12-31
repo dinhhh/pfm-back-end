@@ -28,7 +28,7 @@ public class SecurityConfig {
         http.cors();
         http.csrf().disable();
         http.authorizeHttpRequests(
-                auth -> auth.requestMatchers("/login", "/sign-up").permitAll()
+                auth -> auth.requestMatchers("/login", "/sign-up", "/swagger-ui").permitAll()
                         .anyRequest().authenticated());
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
