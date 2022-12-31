@@ -1,15 +1,13 @@
 package com.hust.pfmbackend.controller;
 
+import com.hust.pfmbackend.model.request.EditLimitExpenseRequest;
 import com.hust.pfmbackend.model.request.LimitExpenseRequest;
 import com.hust.pfmbackend.model.response.LimitExpenseResponse;
 import com.hust.pfmbackend.service.LimitExpenseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,5 +27,12 @@ public class LimitExpenseController {
     @GetMapping(path = "/limit-expense/get-all")
     public ResponseEntity<List<LimitExpenseResponse>> getAll() {
         return ResponseEntity.ok(limitExpenseService.getAll());
+    }
+
+    @DeleteMapping(path = "/limit-expense/delete")
+    public ResponseEntity<String> delete(@RequestBody EditLimitExpenseRequest request) {
+        return limitExpenseService.delete(request) ?
+                ResponseEntity.ok("success") :
+                new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

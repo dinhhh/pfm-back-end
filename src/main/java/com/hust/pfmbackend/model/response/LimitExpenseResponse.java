@@ -9,6 +9,7 @@ import lombok.*;
 @ToString
 public class LimitExpenseResponse {
 
+    private String limitExpenseNo;
     private String name;
     private String walletName;
     private long amount;

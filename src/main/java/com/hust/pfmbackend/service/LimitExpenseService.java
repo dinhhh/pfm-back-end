@@ -1,5 +1,6 @@
 package com.hust.pfmbackend.service;
 
+import com.hust.pfmbackend.model.request.EditLimitExpenseRequest;
 import com.hust.pfmbackend.model.request.LimitExpenseRequest;
 import com.hust.pfmbackend.model.response.LimitExpenseResponse;
 
@@ -10,5 +11,7 @@ public interface LimitExpenseService {
     boolean save(LimitExpenseRequest request);
 
     List<LimitExpenseResponse> getAll();
+
+    boolean delete(EditLimitExpenseRequest request);
 
 }

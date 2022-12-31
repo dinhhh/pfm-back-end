@@ -5,6 +5,7 @@ import com.hust.pfmbackend.entity.LimitExpense;
 import com.hust.pfmbackend.entity.PeriodType;
 import com.hust.pfmbackend.entity.User;
 import com.hust.pfmbackend.entity.Wallet;
+import com.hust.pfmbackend.model.request.EditLimitExpenseRequest;
 import com.hust.pfmbackend.model.request.LimitExpenseRequest;
 import com.hust.pfmbackend.model.response.LimitExpenseResponse;
 import com.hust.pfmbackend.repository.CategoryRepository;
@@ -25,6 +26,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LimitExpenseServiceImpl implements LimitExpenseService {
@@ -106,6 +108,7 @@ public class LimitExpenseServiceImpl implements LimitExpenseService {
                 LocalDateTime endDate = convertToLocalDateTime(le.getEndDate());
                 long dayLeft = Duration.between(startDate, endDate).toDays();
                 responses.add(LimitExpenseResponse.builder()
+                                .limitExpenseNo(le.getLimitExpenseNo())
                                 .name(le.getName())
                                 .dayLeft(dayLeft)
                                 .remainingAmount(le.getRemainingAmount())
@@ -121,6 +124,36 @@ public class LimitExpenseServiceImpl implements LimitExpenseService {
             LOGGER.error("Error when save new limit expense");
         }
         return null;
+    }
+
+    @Override
+    public boolean delete(EditLimitExpenseRequest request) {
+        if ( !Validator.isValidObject(request) ) {
+            LOGGER.error(String.format("Request %s is not valid", request));
+            return false;
+        }
+
+        try {
+            User user = authManager.getUserByToken();
+            Optional<LimitExpense> limitExpenseOpt = limitExpenseRepository.findById(request.getLimitExpenseNo());
+            if (limitExpenseOpt.isEmpty()) {
+                LOGGER.warn(String.format("Not found limit expense with id %s", request.getLimitExpenseNo()));
+                return false;
+            }
+
+            LimitExpense limitExpense = limitExpenseOpt.get();
+            if ( !limitExpense.getUserNo().equals(user.getUserNo()) ) {
+                LOGGER.warn(String.format("User %s not has permission to delete this limit", user.getEmail()));
+                return false;
+            }
+
+            limitExpenseRepository.deleteById(limitExpense.getLimitExpenseNo());
+            LOGGER.info(String.format("Deleted this limit id %s", limitExpense.getLimitExpenseNo()));
+            return true;
+        } catch (Exception e) {
+            LOGGER.error(String.format("Error when delete limit expense with id %s", request.getLimitExpenseNo()));
+        }
+        return false;
     }
 
     private LocalDateTime convertToLocalDateTime(Date d) {

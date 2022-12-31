@@ -4,6 +4,7 @@ import com.hust.pfmbackend.entity.Category;
 import com.hust.pfmbackend.entity.OperationType;
 import com.hust.pfmbackend.entity.User;
 import com.hust.pfmbackend.model.request.CategoryRequest;
+import com.hust.pfmbackend.model.request.EditCategoryRequest;
 import com.hust.pfmbackend.model.response.CategoryResponse;
 import com.hust.pfmbackend.repository.CategoryRepository;
 import com.hust.pfmbackend.security.jwt.JwtAuthManager;
@@ -17,6 +18,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -33,7 +35,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public boolean save(CategoryRequest request) {
-        if ( !Validator.isValidObject(request) ) {
+        if (!Validator.isValidObject(request)) {
             LOGGER.error("Request is not valid");
             return false;
         }
@@ -86,6 +88,69 @@ public class CategoryServiceImpl implements CategoryService {
         return null;
     }
 
+    @Override
+    public boolean update(EditCategoryRequest request) {
+        if (!Validator.isValidObject(request)) {
+            LOGGER.error("Request is not valid");
+            return false;
+        }
+
+        try {
+            User user = authManager.getUserByToken();
+            Optional<Category> categoryOpt = categoryRepository.findById(request.getCategoryNo());
+            if (categoryOpt.isEmpty()) {
+                LOGGER.warn(String.format("Category no %s is not exist in database", request.getCategoryNo()));
+                return false;
+            }
+
+            Category category = categoryOpt.get();
+            if (!user.getUserNo().equals(category.getUser().getUserNo())) {
+                LOGGER.warn(String.format("User %s not has permission to update this category", user.getEmail()));
+                return false;
+            }
+
+            category.setName(request.getName() != null ? request.getName() : category.getName());
+            category.setDescription(request.getDescription() != null ? request.getDescription() : category.getDescription());
+            categoryRepository.save(category);
+            LOGGER.info(String.format("Updated category with id %s", request.getCategoryNo()));
+            return true;
+        } catch (Exception e) {
+            LOGGER.error("Error when update category");
+        }
+        return false;
+    }
+
+    @Override
+    public boolean delete(EditCategoryRequest request) {
+        if (!Validator.isValidObject(request)) {
+            LOGGER.error("Request is not valid");
+            return false;
+        }
+
+        try {
+            User user = authManager.getUserByToken();
+            Optional<Category> categoryOpt = categoryRepository.findById(request.getCategoryNo());
+            if (categoryOpt.isEmpty()) {
+                LOGGER.warn(String.format("Category no %s is not exist in database", request.getCategoryNo()));
+                return false;
+            }
+
+            Category category = categoryOpt.get();
+            if (!user.getUserNo().equals(category.getUser().getUserNo())) {
+                LOGGER.warn(String.format("User %s not has permission to delete this category", user.getEmail()));
+                return false;
+            }
+
+            categoryRepository.deleteById(request.getCategoryNo());
+
+            LOGGER.info(String.format("Deleted category with id %s", request.getCategoryNo()));
+            return true;
+        } catch (Exception e) {
+            LOGGER.error("Error when update category");
+        }
+        return false;
+    }
+
     private Set<CategoryResponse> getCategoryResponsesByOperationType(OperationType ot) throws Exception {
         User user = authManager.getUserByToken();
         List<Category> categories = categoryRepository.findCategorise(ot, user);
@@ -101,9 +166,9 @@ public class CategoryServiceImpl implements CategoryService {
         for (CategoryResponse response : responses) {
             String parentCategoryNo = response.getParentCategoryNo();
             List<Category> subCategories = categories.stream()
-                            .filter(category -> category.getParentCategoryNo() != null &&
-                                    category.getParentCategoryNo().equals(parentCategoryNo))
-                            .toList();
+                    .filter(category -> category.getParentCategoryNo() != null &&
+                            category.getParentCategoryNo().equals(parentCategoryNo))
+                    .toList();
             response.setSubCategories(subCategories);
         }
         return responses;
