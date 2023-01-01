@@ -9,11 +9,12 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
-public class GeneralStatisticResponse {
+/**
+ * Equivalent format with dataPoints property in CanvasJSChart class (front-end)
+ */
+public class Point {
 
-    private long currentBalance;
-    private long currentHave;
-    private long currentBorrow;
-    private long currentLend;
+    private String label;
+    private double y; // in billion VND
 
 }

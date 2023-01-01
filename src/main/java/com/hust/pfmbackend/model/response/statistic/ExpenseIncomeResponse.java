@@ -5,15 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @Builder
 @ToString
-public class GeneralStatisticResponse {
+public class ExpenseIncomeResponse {
 
-    private long currentBalance;
-    private long currentHave;
-    private long currentBorrow;
-    private long currentLend;
+    private List<Point> month;
+    private List<Point> quarter;
+    private List<Point> year;
 
 }
