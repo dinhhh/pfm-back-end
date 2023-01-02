@@ -69,6 +69,35 @@ public class NotificationServiceImpl implements Subscriber, NotificationService 
     }
 
     @Override
+    public boolean updateRead(String notificationNo) {
+        LOGGER.info(String.format("Start update read of %s", notificationNo));
+        try {
+            Optional<Notification> notificationOpt = notificationRepository.findById(notificationNo);
+            if (notificationOpt.isEmpty()) {
+                LOGGER.error(String.format("Notification no %s not exist in database", notificationNo));
+                return false;
+            }
+
+            User user = authManager.getUserByToken();
+            Notification notification = notificationOpt.get();
+            if (!notification.getUserNo().equals(user.getUserNo())) {
+                LOGGER.error(String.format("User no %s dont have permission to make this notification no %s to read",
+                        user.getUserNo(),
+                        notificationNo));
+                return false;
+            }
+
+            notification.setRead(true);
+            notificationRepository.save(notification);
+
+            return true;
+        } catch (Exception e) {
+            LOGGER.error("Error when get all notifications");
+        }
+        return false;
+    }
+
+    @Override
     public void update(String userNo) {
         Optional<User> user = userRepository.findById(userNo);
         if (user.isEmpty()) {

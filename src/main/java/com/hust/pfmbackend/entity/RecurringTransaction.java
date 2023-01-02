@@ -45,4 +45,7 @@ public class RecurringTransaction {
     @Column(nullable = false)
     private String name;
 
+    @Column(columnDefinition = "boolean default false")
+    private boolean executed = false;
+
 }

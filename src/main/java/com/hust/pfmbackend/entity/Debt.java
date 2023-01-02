@@ -38,4 +38,7 @@ public class Debt {
     @Column(nullable = false)
     private String userDebtInfoNo;
 
+    @Column(columnDefinition = "boolean default false")
+    private boolean notified;
+
 }

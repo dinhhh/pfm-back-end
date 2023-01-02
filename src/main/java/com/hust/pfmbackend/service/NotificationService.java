@@ -8,4 +8,6 @@ public interface NotificationService {
 
     List<NotificationResponse> getAll();
 
+    boolean updateRead(String notificationNo);
+
 }

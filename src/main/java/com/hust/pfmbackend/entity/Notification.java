@@ -27,6 +27,7 @@ public class Notification {
 
     private LocalDateTime createdOn;
 
+    @Column(columnDefinition = "boolean default false")
     private boolean isRead = false;
 
 }
