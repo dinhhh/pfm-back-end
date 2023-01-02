@@ -47,7 +47,7 @@ public class LimitExpenseServiceImpl implements LimitExpenseService {
 
     @Override
     public boolean save(LimitExpenseRequest request) {
-        if ( !Validator.isValidObject(request) ) {
+        if (!Validator.isValidObject(request)) {
             LOGGER.error(String.format("Request %s is not valid", request));
             return false;
         }
@@ -108,15 +108,15 @@ public class LimitExpenseServiceImpl implements LimitExpenseService {
                 LocalDateTime endDate = convertToLocalDateTime(le.getEndDate());
                 long dayLeft = Duration.between(startDate, endDate).toDays();
                 responses.add(LimitExpenseResponse.builder()
-                                .limitExpenseNo(le.getLimitExpenseNo())
-                                .name(le.getName())
-                                .dayLeft(dayLeft)
-                                .remainingAmount(le.getRemainingAmount())
-                                .amount(le.getAmount())
-                                .walletName(walletRepository.findById(le.getWalletNo()).map(Wallet::getName)
-                                        .orElseThrow())
-                                .endDate(DateFormatUtils.convertToString(le.getStartDate(), DatePattern.DD_MM_YYYY))
-                                .startDate(DateFormatUtils.convertToString(le.getEndDate(), DatePattern.DD_MM_YYYY))
+                        .limitExpenseNo(le.getLimitExpenseNo())
+                        .name(le.getName())
+                        .dayLeft(dayLeft)
+                        .remainingAmount(le.getRemainingAmount())
+                        .amount(le.getAmount())
+                        .walletName(walletRepository.findById(le.getWalletNo()).map(Wallet::getName)
+                                .orElseThrow())
+                        .endDate(DateFormatUtils.convertToString(le.getStartDate(), DatePattern.DD_MM_YYYY))
+                        .startDate(DateFormatUtils.convertToString(le.getEndDate(), DatePattern.DD_MM_YYYY))
                         .build());
             }
             return responses;
@@ -128,7 +128,7 @@ public class LimitExpenseServiceImpl implements LimitExpenseService {
 
     @Override
     public boolean delete(EditLimitExpenseRequest request) {
-        if ( !Validator.isValidObject(request) ) {
+        if (!Validator.isValidObject(request)) {
             LOGGER.error(String.format("Request %s is not valid", request));
             return false;
         }
@@ -142,7 +142,7 @@ public class LimitExpenseServiceImpl implements LimitExpenseService {
             }
 
             LimitExpense limitExpense = limitExpenseOpt.get();
-            if ( !limitExpense.getUserNo().equals(user.getUserNo()) ) {
+            if (!limitExpense.getUserNo().equals(user.getUserNo())) {
                 LOGGER.warn(String.format("User %s not has permission to delete this limit", user.getEmail()));
                 return false;
             }

@@ -2,10 +2,7 @@ package com.hust.pfmbackend.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.util.Date;
@@ -38,6 +35,7 @@ public class ExpenseIncome {
     @ManyToOne
     @JoinColumn(name = "wallet_no")
     @JsonIgnore
+    @ToString.Exclude
     private Wallet wallet;
 
     private String categoryNo;

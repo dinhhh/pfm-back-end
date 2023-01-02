@@ -2,10 +2,7 @@ package com.hust.pfmbackend.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.util.Collection;
@@ -24,9 +21,11 @@ public class Wallet {
     @ManyToOne
     @JoinColumn(name = "user_no")
     @JsonIgnore
+    @ToString.Exclude
     private User user;
 
     @OneToMany(mappedBy = "wallet")
+    @ToString.Exclude
     private Collection<ExpenseIncome> history;
 
     @Column(nullable = false)
