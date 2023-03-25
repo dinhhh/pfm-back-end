@@ -18,4 +18,6 @@ public class WalletResponse {
 
     private List<Wallet> wallets;
 
+    private List<Wallet> savingAccounts;
+
 }

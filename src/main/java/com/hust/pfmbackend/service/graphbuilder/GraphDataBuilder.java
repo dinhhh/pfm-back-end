@@ -91,7 +91,12 @@ public class GraphDataBuilder {
                     map.put(year, prevAmount - expenseIncome.getAmount());
                 }
             } else {
-                map.put(year, 0L);
+                if (expenseIncome.getOperationType() == OperationType.INCOME) {
+                    map.put(year, expenseIncome.getAmount());
+                }
+                if (expenseIncome.getOperationType() == OperationType.EXPENSE) {
+                    map.put(year, -expenseIncome.getAmount());
+                }
             }
         }
 
@@ -127,7 +132,12 @@ public class GraphDataBuilder {
                     // plus because this is income
                 }
             } else {
-                incomeExpenseValueInMonth.put(month, amount);
+                if (expenseIncome.getOperationType() == OperationType.INCOME) {
+                    incomeExpenseValueInMonth.put(month, expenseIncome.getAmount());
+                }
+                if (expenseIncome.getOperationType() == OperationType.EXPENSE) {
+                    incomeExpenseValueInMonth.put(month, -expenseIncome.getAmount());
+                }
             }
         }
 

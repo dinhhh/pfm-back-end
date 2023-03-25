@@ -1,7 +1,9 @@
 package com.hust.pfmbackend.service.impl;
 
+import com.hust.pfmbackend.entity.ExpenseIncome;
 import com.hust.pfmbackend.entity.User;
 import com.hust.pfmbackend.entity.Wallet;
+import com.hust.pfmbackend.model.request.NewSavingAccountRequest;
 import com.hust.pfmbackend.model.request.NewWalletRequest;
 import com.hust.pfmbackend.model.response.WalletResponse;
 import com.hust.pfmbackend.repository.UserRepository;
@@ -14,7 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class WalletServiceImpl implements WalletService {
@@ -48,7 +56,15 @@ public class WalletServiceImpl implements WalletService {
                     .name(request.getName())
                     .description(request.getDescription())
                     .user(user)
+                    .createdDate(LocalDate.now())
                     .build();
+
+            if (request instanceof NewSavingAccountRequest newSavingAccountRequest) {
+                wallet.setDayInterestRate(newSavingAccountRequest.getDayInterestRate());
+                wallet.setYearInterestRate(newSavingAccountRequest.getYearInterestRate());
+                wallet.setPeriod(newSavingAccountRequest.getPeriod());
+                wallet.setDueDate(wallet.getCreatedDate().plusMonths(newSavingAccountRequest.getPeriod()));
+            }
             walletRepository.save(wallet);
             LOGGER.info("Saved new wallet entity");
             return true;
@@ -66,15 +82,29 @@ public class WalletServiceImpl implements WalletService {
             String userName = authManager.getUserNameByToken();
             User user = userRepository.findUserByEmail(userName);
             List<Wallet> wallets = walletRepository.findAllByUser(user);
+            for (Wallet wallet : wallets) {
+                List<ExpenseIncome> rawHistory = new java.util.ArrayList<>(wallet.getHistory().stream().toList());
+                rawHistory.sort(Comparator.comparing(ExpenseIncome::getCreateOn));
+                wallet.setHistory(rawHistory);
+            }
             long balance = wallets.stream().map(Wallet::getBalance).reduce(0L, Long::sum);
             return WalletResponse.builder()
-                    .wallets(wallets)
+                    .wallets(wallets.stream()
+                            .filter(w -> !isSavingAccount(w))
+                            .collect(Collectors.toList()))
+                    .savingAccounts(wallets.stream()
+                            .filter(this::isSavingAccount)
+                            .collect(Collectors.toList()))
                     .balance(balance)
                     .build();
         } catch (Exception e) {
             LOGGER.warn("Error when get all wallets by user");
         }
         return null;
+    }
+
+    private boolean isSavingAccount(Wallet wallet) {
+        return wallet.getYearInterestRate() != null || wallet.getDayInterestRate() != null;
     }
 
 }

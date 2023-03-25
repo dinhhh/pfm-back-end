@@ -22,8 +22,8 @@ public class CategoryRepositoryTest {
     @Test
     void save() {
         Category defaultCategory = Category.builder()
-                .name("default category")
-                .operationType(OperationType.EXPENSE)
+                .name("Ghi chép thu định kỳ")
+                .operationType(OperationType.INCOME)
                 .createOn(new Date(System.currentTimeMillis()))
                 .build();
         repository.save(defaultCategory);

@@ -1,5 +1,6 @@
 package com.hust.pfmbackend.controller;
 
+import com.hust.pfmbackend.model.request.NewSavingAccountRequest;
 import com.hust.pfmbackend.model.request.NewWalletRequest;
 import com.hust.pfmbackend.model.response.WalletResponse;
 import com.hust.pfmbackend.service.WalletService;
@@ -27,5 +28,12 @@ public class WalletController {
     @GetMapping(path = "/wallet/get-all")
     public ResponseEntity<WalletResponse> getAll() {
         return ResponseEntity.ok(walletService.getAllByUser());
+    }
+
+    @PostMapping(path = "/wallet/new-saving-account")
+    public ResponseEntity<String> saveSavingAccount(@RequestBody NewSavingAccountRequest request) {
+        return walletService.save(request) ?
+                ResponseEntity.ok("success") :
+                new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

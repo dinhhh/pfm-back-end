@@ -35,4 +35,6 @@ public class NewRecurringTransactionRequest {
     @NotBlank
     private String name;
 
+    private String walletNo;
+
 }

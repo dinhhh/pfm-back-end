@@ -64,6 +64,7 @@ public class RecurringTransactionServiceImpl implements RecurringTransactionServ
                     .startDate(request.getStartDate())
                     .endDate(request.getEndDate())
                     .name(request.getName())
+                    .walletNo(request.getWalletNo())
                     .build();
             recurringTransactionRepository.save(transaction);
             LOGGER.info("Saved new recurring transaction");

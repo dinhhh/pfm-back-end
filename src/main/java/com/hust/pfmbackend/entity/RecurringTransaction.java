@@ -48,4 +48,6 @@ public class RecurringTransaction {
     @Column(columnDefinition = "boolean default false")
     private boolean executed = false;
 
+    private String walletNo;
+
 }

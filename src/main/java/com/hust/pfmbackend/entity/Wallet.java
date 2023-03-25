@@ -4,8 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
+import org.springframework.data.annotation.CreatedDate;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Date;
 
 @Entity
 @Data
@@ -34,4 +39,14 @@ public class Wallet {
     private String description;
 
     private long balance = 0;
+
+    private BigDecimal yearInterestRate;
+
+    private BigDecimal dayInterestRate;
+
+    private long period;
+
+    private LocalDate createdDate;
+
+    private LocalDate dueDate;
 }

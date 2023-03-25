@@ -122,6 +122,7 @@ public class DebtServiceImpl implements DebtService {
             long returnedDebt = 0L;
             for (Debt debt : debts) {
                 if (debt.getActualCollectDate() != null) {
+                    returnedDebt += debt.getAmount();
                     continue;
                 }
 
@@ -134,9 +135,6 @@ public class DebtServiceImpl implements DebtService {
                 }
 
                 totalDebt += debt.getAmount();
-                if (debt.getActualCollectDate() != null) {
-                    returnedDebt += debt.getAmount();
-                }
             }
 
             List<DebtResponse.UserDebtInfo> info = new ArrayList<>();
